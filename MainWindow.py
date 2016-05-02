@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'UI/self.ui'
 #
-# Created by: PyQt5 UI code generator 5.5
+# Created by: PyQt5 UI code generator 5.5.1
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,7 +12,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         QtWidgets.QMainWindow.__init__(self)
         self.setObjectName("MainWindow")
-        self.resize(900, 480)
+        self.resize(900, 381)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -27,13 +27,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.centralwidget = QtWidgets.QWidget(self)
         self.centralwidget.setObjectName("centralwidget")
         self.mainImage = QtWidgets.QLabel(self.centralwidget)
-        self.mainImage.setGeometry(QtCore.QRect(10, 10, 461, 421))
+        self.mainImage.setGeometry(QtCore.QRect(10, 10, 431, 331))
         self.mainImage.setText("")
         self.mainImage.setPixmap(QtGui.QPixmap(":/images/emptyImage.png"))
         self.mainImage.setAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignTop)
         self.mainImage.setObjectName("mainImage")
         self.comandText = QtWidgets.QTextEdit(self.centralwidget)
-        self.comandText.setGeometry(QtCore.QRect(480, 10, 411, 421))
+        self.comandText.setGeometry(QtCore.QRect(480, 60, 411, 281))
         self.comandText.setObjectName("comandText")
         self.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(self)
