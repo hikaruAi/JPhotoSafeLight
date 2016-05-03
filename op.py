@@ -1,13 +1,6 @@
 from PIL import Image
 from math import *
-
-image=Image.open("#IMAGEPATH#")
-width=image.width
-height=image.height
-center_x=int(width/2)
-center_y=int(height/2)
-center=(center_x,center_y)
-pixels=list(image.getdata())
+#sys#
 
 ###########FUNCTIONS################3
 def getPixelAt(px,py):
@@ -58,17 +51,31 @@ def getGrayQuantAsColor(color=(0,0,0),n=3):
     return (g,g,g)
 
 ###########LOOP#############
-for i in range(len(pixels)):
-    px = i % ( width )
-    py = math.trunc( i / width)
-    x=px/width
-    y=py/height
-    color=pixels[i]
-    r=color[0]
-    g=color[1]
-    b=color[2]
-    distance_center=sqrt(((px-center_x)**2)+((py-center_y)**2))
-    #command#
-    pixels[i]=(int(r),int(g),int(b))
-image.putdata(pixels)
-image.save(self.workingImage)
+def execute(fileName):
+#TAB#file=fileName
+#TAB#image=Image.open(file)
+#TAB#width=image.width
+#TAB#height=image.height
+#TAB#center_x=int(width/2)
+#TAB#center_y=int(height/2)
+#TAB#center=(center_x,center_y)
+#TAB#pixels=list(image.getdata())
+#TAB#for i in range(len(pixels)):
+#TAB#   px = i % ( width )
+#TAB#   py = trunc( i / width)
+#TAB#   x=px/width
+#TAB#   y=py/height
+#TAB#   color=pixels[i]
+#TAB#   r=color[0]
+#TAB#   g=color[1]
+#TAB#   b=color[2]
+#TAB#   distance_center=sqrt(((px-center_x)**2)+((py-center_y)**2))
+#TAB#   #command#
+#TAB#   pixels[i]=(int(r),int(g),int(b))
+#TAB#image.putdata(pixels)
+#TAB#image.save(file)
+
+if __name__=="__main__":
+    #if len(sys.argv)>1:
+        execute(#IMAGEPATH#)
+    #else: print("NO IMAGE")

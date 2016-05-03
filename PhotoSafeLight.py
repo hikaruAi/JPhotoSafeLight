@@ -10,11 +10,7 @@ from enum import Enum
 from math import *
 import time
 
-useNumpy=False
-if useNumpy:
-    processFile="op_numpy.py"
-else:
-    processFile="op.py"
+processFile="op.py"
 debug=True
 
 class CommandMode(Enum):
@@ -63,28 +59,59 @@ class PhotoSafeLight(MainWindow):
         ###MENU####
         self.actionLoad_Image.triggered.connect(self.On_Menu_LoadImage)
         self.comandText.textChanged.connect(self.CommandTextTextChanged)
-        self.useNumpy.stateChanged.connect(self.OnUseNumpyChanged)
+        #self.useNumpy.stateChanged.connect(self.OnUseNumpyChanged)
+        self.actionExport_Filter.triggered.connect(self.On_Menu_ExportFilter)
+        self.actionSave_Image.triggered.connect(self.On_Menu_SaveImage)
 
-    def OnUseNumpyChanged(self,v):
-        useNumpy=self.useNumpy.isChecked()
-        if useNumpy:
-            processFile="op_numpy.py"
+    def On_Menu_SaveImage(self):
+        ext=self.workingImage.split(".")[-1]
+        f=QtWidgets.QFileDialog.getSaveFileName(self,"Export Image",self.browseLocation,"Image (*."+ext+")",None)[0]
+        self.On_Menu_ExportFilter(self.tempDirectory+"_temp_.py")
+        sf=open(self.tempDirectory+"_temp_.py")
+        s=sf.read()
+        sf.close()
+        s=s.replace("    if len(sys.argv)>1:","")
+        s=s.replace("        execute","    execute")
+        s=s.replace("else","#else")
+        s=s.replace("sys.argv[1]","'"+self.file+"'")
+        s=s.replace("image.save(file)","image.save('"+f+"')")
+        c=compile(s,"<string>","exec")
+        exec(c)
+
+    def On_Menu_ExportFilter(self,optionalFile=None):
+        if optionalFile == None:
+            f=QtWidgets.QFileDialog.getSaveFileName(self,"Export Filter",self.browseLocation,"Python File (*.py *.pyw)",None)[0]
         else:
-            processFile="op.py"
-        f=open(processFile)
-        self.opsString=f.read()
-        f.close()
-        #print(self.opsString)
+            f=optionalFile
+        s="#Your code here"
+        for l in self.listOfCommands:
+            s=s+"       "+l+"\n"
+        fh=open(f,"wt")
+        ns=self.opsString.replace("#command#",s)
+        ns=ns.replace("#IMAGEPATH#",'sys.argv[1]')
+        ns=ns.replace("#sys#","import sys")
+        ns=ns.replace("#if","if")
+        ns=ns.replace("#else","else")
+        ns=ns.replace("#TAB#","    ")
+        fh.write(ns)
+        fh.close()
+
     def ExecuteLastCommand(self):
         initTime=time.time()
         f=self.opsString
-        f=f.replace("#IMAGEPATH#",self.workingImage)
+        f=f.replace("#IMAGEPATH#","'"+self.workingImage+"'")
         f=f.replace("#command#",self.listOfCommands[-1])
+        f=f.replace("def execute(fileName):","")
+        f=f.replace("#TAB#","")
+        f=f.replace("fileName","'"+self.workingImage+"'")
+        f=f.replace("if __name__","#if __name__")
+        f=f.replace("execute","#execute")
         c=compile(f,"<string>","exec")
         exec(c)
         self.RefreshMainImageFromTemp()
         self.LoadImageFromTempToPIL()
         print("Execute command time:", time.time()-initTime)
+
     def CommandTextTextChanged(self):
         if self.comandText.toPlainText()[-1]==">":
             return
@@ -146,4 +173,3 @@ if __name__=="__main__":
     mainWindow=PhotoSafeLight()
     sys.exit(app.exec_())
 
-#lint:enable
