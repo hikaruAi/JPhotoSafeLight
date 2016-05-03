@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>900</width>
-    <height>381</height>
+    <height>365</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -41,8 +41,8 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>431</width>
-      <height>331</height>
+      <width>291</width>
+      <height>291</height>
      </rect>
     </property>
     <property name="text">
@@ -58,11 +58,27 @@
    <widget class="QTextEdit" name="comandText">
     <property name="geometry">
      <rect>
-      <x>480</x>
-      <y>60</y>
+      <x>310</x>
+      <y>40</y>
       <width>411</width>
-      <height>281</height>
+      <height>251</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="useNumpy">
+    <property name="geometry">
+     <rect>
+      <x>310</x>
+      <y>300</y>
+      <width>121</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Use Numpy(slow)</string>
+    </property>
+    <property name="checked">
+     <bool>false</bool>
     </property>
    </widget>
   </widget>

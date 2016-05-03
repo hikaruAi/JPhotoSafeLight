@@ -1,4 +1,3 @@
-#lint:disable
 ###Main Script####
 
 import sys
@@ -11,6 +10,11 @@ from enum import Enum
 from math import *
 import time
 
+useNumpy=False
+if useNumpy:
+    processFile="op_numpy.py"
+else:
+    processFile="op.py"
 debug=True
 
 class CommandMode(Enum):
@@ -31,11 +35,15 @@ class PhotoSafeLight(MainWindow):
         self.listOfCommands=[""]
         self.currentLineText=""
         self.moreSetup()
+        f=open(processFile)
+        self.opsString=f.read()
+        f.close()
         if debug:
             self.file="DefaultImage.jpg"
             self.SetInitialTempFiles()
             self.LoadImageFromTempToPIL()
             self.RefreshMainImageFromTemp()
+            self.setTitle()
         self.show()
 
     def moreSetup(self):
@@ -55,85 +63,28 @@ class PhotoSafeLight(MainWindow):
         ###MENU####
         self.actionLoad_Image.triggered.connect(self.On_Menu_LoadImage)
         self.comandText.textChanged.connect(self.CommandTextTextChanged)
+        self.useNumpy.stateChanged.connect(self.OnUseNumpyChanged)
 
+    def OnUseNumpyChanged(self,v):
+        useNumpy=self.useNumpy.isChecked()
+        if useNumpy:
+            processFile="op_numpy.py"
+        else:
+            processFile="op.py"
+        f=open(processFile)
+        self.opsString=f.read()
+        f.close()
+        #print(self.opsString)
     def ExecuteLastCommand(self):
         initTime=time.time()
-        image=self.PIL_image
-        width=image.width
-        height=image.height
-        center_x=int(width/2)
-        center_y=int(height/2)
-        center=(center_x,center_y)
-        listData=list(image.getdata())
-        command, mode =self.getCommandMode()
-        #command=command.replace("g","locals()['g']")
-        print("Command:",command)
-        commandAsFunc=eval("lambda: "+command)
-        for i in range(len(listData)):
-            px = i % ( width )
-            py = math.trunc( i / width)
-            x=px/width
-            y=py/height
-            pixel=listData[i]
-            r=pixel[0]
-            g=pixel[1]
-            b=pixel[2]
-            distance_center=sqrt(((px-center_x)**2)+((py-center_y)**2))
-            if mode==CommandMode.red:
-                r=int(commandAsFunc())
-            elif mode==CommandMode.green:
-                g=int(commandAsFunc())
-            elif mode==CommandMode.blue:
-                b=int(commandAsFunc())
-            elif mode==CommandMode.pixel:
-                pixel=eval(commandAsFunc())
-            elif mode==CommandMode.none:
-               break
-            #r=int((r+g+b)/3)
-
-            if mode==CommandMode.pixel:
-                listData[i]=pixel
-            else:
-                listData[i]=(r,g,b)
-        image.putdata(listData)
-        image.save(self.workingImage)
+        f=self.opsString
+        f=f.replace("#IMAGEPATH#",self.workingImage)
+        f=f.replace("#command#",self.listOfCommands[-1])
+        c=compile(f,"<string>","exec")
+        exec(c)
         self.RefreshMainImageFromTemp()
         self.LoadImageFromTempToPIL()
         print("Execute command time:", time.time()-initTime)
-
-    def getCommandMode(self):
-        command=self.listOfCommands[-1]
-        mode=CommandMode.none
-
-        if "r=" in command:
-                command=command.replace("r=","")
-                mode=CommandMode.red
-        elif "r =" in command:
-            command=command.replace("r =","")
-            mode=CommandMode.red
-
-        elif "g=" in command:
-            command=command.replace("g=","")
-            mode=CommandMode.green
-        elif "g =" in command:
-            command=command.replace("g =","")
-            mode=CommandMode.green
-
-        elif "b=" in command:
-            command=command.replace("b=","")
-            mode=CommandMode.green
-        elif "b =" in command:
-            command=command.replace("b =","")
-            mode=CommandMode.green
-
-        elif "pixel=" in command:
-            command=command.replace("pixel=","")
-            mode=CommandMode.green
-        elif "pixel =" in command:
-            command=command.replace("pixel =","")
-            mode=CommandMode.pixel
-        return command, mode
-
     def CommandTextTextChanged(self):
         if self.comandText.toPlainText()[-1]==">":
             return
@@ -188,6 +139,7 @@ class PhotoSafeLight(MainWindow):
         self.SetInitialTempFiles()
         self.RefreshMainImageFromTemp()
         self.LoadImageFromTempToPIL()
+        self.setTitle()
 
 if __name__=="__main__":
     app=QtWidgets.QApplication(sys.argv)
