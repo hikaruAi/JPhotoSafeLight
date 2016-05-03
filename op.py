@@ -70,6 +70,10 @@ def execute(fileName):
 #TAB#   g=color[1]
 #TAB#   b=color[2]
 #TAB#   distance_center=sqrt(((px-center_x)**2)+((py-center_y)**2))
+#TAB#   distance_center_normX=distance_center/width
+#TAB#   distance_center_normY=distance_center/height
+#TAB#   vignet_factorX=1-distance_center_normX
+#TAB#   vignet_factorY=1-distance_center_normY
 #TAB#   #command#
 #TAB#   pixels[i]=(int(r),int(g),int(b))
 #TAB#image.putdata(pixels)
