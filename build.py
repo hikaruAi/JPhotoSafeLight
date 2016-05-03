@@ -1,4 +1,6 @@
-﻿import os
+﻿import os,shutil
+buildDir="build\\exe.win32-3.4\\"
+buildZip="JPhotoSafeLight"
 script="""import sys
 
 from cx_Freeze import setup, Executable
@@ -19,4 +21,9 @@ file.write(script)
 file.close()
 os.system("python temp.py build")
 os.remove("temp.py")
-input("\nHECHO")
+print("Copying extra files")
+shutil.copy("op.py",buildDir+"op.py")
+shutil.copy("DefaultImage.jpg",buildDir+"DefaultImage.jpg")
+print("Creating Zip")
+shutil.make_archive(buildZip, 'zip', buildDir)
+print("\nDONE!")
