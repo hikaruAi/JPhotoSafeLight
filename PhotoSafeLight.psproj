@@ -23,7 +23,7 @@ FileName=$[Project-Path]Resources\emptyImage.png
 
 [Project\ChildNodes\Node0\ChildNodes\Node0\ChildNodes\Node0\ChildNodes\Node1]
 ClassName=TProjectFileNode
-FileName=$[Project-Path]Resources\icon.svg
+FileName=$[Project-Path]Resources\icon.ico
 
 [Project\ChildNodes\Node0\ChildNodes\Node0\ChildNodes\Node0\ChildNodes\Node2]
 ClassName=TProjectFileNode
@@ -31,7 +31,7 @@ FileName=$[Project-Path]Resources\icon.png
 
 [Project\ChildNodes\Node0\ChildNodes\Node0\ChildNodes\Node0\ChildNodes\Node3]
 ClassName=TProjectFileNode
-FileName=$[Project-Path]Resources\icon.ico
+FileName=$[Project-Path]Resources\icon.svg
 
 [Project\ChildNodes\Node0\ChildNodes\Node0\ChildNodes\Node0\ChildNodes\Node4]
 ClassName=TProjectFileNode
@@ -53,46 +53,50 @@ Count=1
 
 [Project\ChildNodes\Node0\ChildNodes\Node0\ChildNodes\Node2]
 ClassName=TProjectFileNode
-FileName=$[Project-Path]build.py
+FileName=$[Project-Path]_temp.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node0\ChildNodes\Node3]
 ClassName=TProjectFileNode
-FileName=$[Project-Path]BuildResources.py
+FileName=$[Project-Path]build.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node0\ChildNodes\Node4]
 ClassName=TProjectFileNode
-FileName=$[Project-Path]builEXE.py
+FileName=$[Project-Path]BuildResources.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node0\ChildNodes\Node5]
 ClassName=TProjectFileNode
-FileName=$[Project-Path]exported.py
+FileName=$[Project-Path]builEXE.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node0\ChildNodes\Node6]
 ClassName=TProjectFileNode
-FileName=$[Project-Path]MainWindow.py
+FileName=$[Project-Path]exported.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node0\ChildNodes\Node7]
 ClassName=TProjectFileNode
-FileName=$[Project-Path]op.py
+FileName=$[Project-Path]MainWindow.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node0\ChildNodes\Node8]
 ClassName=TProjectFileNode
-FileName=$[Project-Path]op_numpy.py
+FileName=$[Project-Path]op.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node0\ChildNodes\Node9]
 ClassName=TProjectFileNode
-FileName=$[Project-Path]PhotoSafeLight.psproj
+FileName=$[Project-Path]op_numpy.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node0\ChildNodes\Node10]
 ClassName=TProjectFileNode
-FileName=$[Project-Path]PhotoSafeLight.py
+FileName=$[Project-Path]PhotoSafeLight.psproj
 
 [Project\ChildNodes\Node0\ChildNodes\Node0\ChildNodes\Node11]
+ClassName=TProjectFileNode
+FileName=$[Project-Path]PhotoSafeLight.py
+
+[Project\ChildNodes\Node0\ChildNodes\Node0\ChildNodes\Node12]
 ClassName=TProjectFileNode
 FileName=$[Project-Path]resources.py
 
 [Project\ChildNodes\Node0\ChildNodes\Node0\ChildNodes]
-Count=12
+Count=13
 
 [Project\ChildNodes\Node0\ChildNodes]
 Count=1

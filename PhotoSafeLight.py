@@ -30,6 +30,10 @@ class PhotoSafeLight(MainWindow):
         self.lastWorkingImage=""
         self.PIL_image=None
         self.listOfCommands=[""]
+        self.listOfVariables=[""]
+        self.builtins=["r","g","b","px","py","x","y","center_x","center_y","center",
+                        "distance_center","distance_center_normX","distance_center_normY",
+                        "vignet_factorX","vignet_factorY","width","height","color"]
         self.currentLineText=""
         self.moreSetup()
         f=open(processFile)
@@ -105,17 +109,42 @@ class PhotoSafeLight(MainWindow):
         fh.write(ns)
         fh.close()
 
+    def preProcessCommand(self):
+        com=""
+        com=self.listOfCommands[-1]
+        varA=""
+        hasVariable=False
+        v=""
+        if "=" in com:
+            i=com.find("=")
+            for j in range(1,5):
+                if com[i-j] not in self.builtins:
+                    varA=com
+                    self.listOfVariables.append(varA)
+                    print("Added variable:",varA)
+                    hasVariable=True
+                    break
+        for s in self.listOfVariables:
+            v+=s+"\n   "
+        return v,hasVariable
     def ExecuteLastCommand(self):
         initTime=time.time()
         f=self.opsString
         f=f.replace("#IMAGEPATH#","'"+self.workingImage+"'")
-        f=f.replace("#command#",self.listOfCommands[-1])
+        pp=self.preProcessCommand()
+        f=f.replace("#variables#",pp[0])
         f=f.replace("def execute(fileName):","")
         f=f.replace("#TAB#","")
         f=f.replace("fileName","'"+self.workingImage+"'")
         f=f.replace("if __name__","#if __name__")
         f=f.replace("execute","#execute")
-        c=compile(f,"<string>","exec")
+        if debug:
+            tf=open("_temp.py","wt")
+            tf.write(f)
+            tf.close()
+        f=f.replace("#command#",self.listOfCommands[-1])
+        if pp[1]:
+            c=compile(f,"<string>","exec")
         #UNDO#
         shutil.copy2(self.workingImage,self.lastWorkingImage)
         exec(c)
