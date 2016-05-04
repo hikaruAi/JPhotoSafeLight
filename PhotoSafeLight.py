@@ -29,16 +29,19 @@ class PhotoSafeLight(MainWindow):
         self.workingImage=""
         self.lastWorkingImage=""
         self.PIL_image=None
-        self.listOfCommands=[""]
-        self.listOfVariables=[""]
-        self.builtins=["r","g","b","px","py","x","y","center_x","center_y","center",
-                        "distance_center","distance_center_normX","distance_center_normY",
-                        "vignet_factorX","vignet_factorY","width","height","color"]
+        self.listOfCommands=list()
+        self.listOfVariables=list()
+        self.listOfPreLoop=list()
         self.currentLineText=""
-        self.moreSetup()
         f=open(processFile)
         self.opsString=f.read()
         f.close()
+        self.builtins=["r","g","b","px","py","x","y","center_x","center_y","center",
+                        "distance_center","distance_center_normX","distance_center_normY",
+                        "vignet_factorX","vignet_factorY","width","height","color",
+                        ]
+        self.getFunctions()
+        self.moreSetup()
         if debug:
             self.file="DefaultImage.jpg"
             self.SetInitialTempFiles()
@@ -46,7 +49,13 @@ class PhotoSafeLight(MainWindow):
             self.RefreshMainImageFromTemp()
             self.setTitle()
         self.show()
-
+    def getFunctions(self):
+        s=self.opsString
+        s=s.split("def execute")[0]
+        l=s.split("\n")
+        for sl in l:
+            if ("def ") in sl:
+                self.builtins.append(sl.split("def ")[-1].split(":")[0])
     def moreSetup(self):
         self.setTitle()
         self.setEventsHandlers()
@@ -54,7 +63,21 @@ class PhotoSafeLight(MainWindow):
         p_scaled= p.scaled(self.mainImage.size(), QtCore.Qt.KeepAspectRatio,1)
         self.mainImage.setPixmap(p_scaled)
         #self.comandText.insertPlainText(">>")
+        self.setInfo()
 
+    def setInfo(self):
+        s="BUILTINS:\n"
+        for b in self.builtins:
+            s+="-"+b+"\n"
+        if len(self.listOfPreLoop) >0:
+            s+="\nPRELOOP:\n"
+            for p in self.listOfPreLoop:
+                s+=p+"\n"
+        if len(self.listOfVariables) >0:
+            s+="\nVARIABLES:\n"
+            for v in self.listOfVariables:
+                s+=v+"\n"
+        self.ReferenceText.setPlainText(s)
     def setTitle(self):
         s="J PhotoSafeLight - $fileName$"
         s=s.replace("$fileName$",self.file)
@@ -112,6 +135,10 @@ class PhotoSafeLight(MainWindow):
     def preProcessCommand(self):
         com=""
         com=self.listOfCommands[-1]
+        if "#" in com:
+            self.listOfPreLoop.append(com.split("#")[1])
+            self.setInfo()
+            return "",False
         varA=""
         hasVariable=False
         v=""
@@ -119,10 +146,11 @@ class PhotoSafeLight(MainWindow):
             i=com.find("=")
             for j in range(1,5):
                 if com[i-j] not in self.builtins:
-                    varA=com
+                    varA=com#com.split("=")[0]
                     self.listOfVariables.append(varA)
                     print("Added variable:",varA)
                     hasVariable=True
+                    self.setInfo()
                     break
         for s in self.listOfVariables:
             v+=s+"\n   "
@@ -138,18 +166,26 @@ class PhotoSafeLight(MainWindow):
         f=f.replace("fileName","'"+self.workingImage+"'")
         f=f.replace("if __name__","#if __name__")
         f=f.replace("execute","#execute")
+        pls=""
+        for pl in self.listOfPreLoop:
+            pls+=pl+"\n"
+        f=f.replace("#PRELOOP#",pls)
         if debug:
             tf=open("_temp.py","wt")
             tf.write(f)
             tf.close()
         f=f.replace("#command#",self.listOfCommands[-1])
         if pp[1]:
+            self.setInfo()
+        try:
             c=compile(f,"<string>","exec")
-        #UNDO#
-        shutil.copy2(self.workingImage,self.lastWorkingImage)
-        exec(c)
-        self.RefreshMainImageFromTemp()
-        self.LoadImageFromTempToPIL()
+            #UNDO#
+            shutil.copy2(self.workingImage,self.lastWorkingImage)
+            exec(c)
+            self.RefreshMainImageFromTemp()
+            self.LoadImageFromTempToPIL()
+        except Exception as e:
+            self.messageText.appendPlainText("[ERROR]"+str(e))
         print("Execute command time:", time.time()-initTime)
 
     def CommandTextTextChanged(self):
@@ -206,6 +242,7 @@ class PhotoSafeLight(MainWindow):
         self.SetInitialTempFiles()
         self.RefreshMainImageFromTemp()
         self.LoadImageFromTempToPIL()
+        self.mainImage.setToolTip(self.file)
         self.setTitle()
 
 if __name__=="__main__":

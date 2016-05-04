@@ -60,6 +60,7 @@ def execute(fileName):
 #TAB#center_y=int(height/2)
 #TAB#center=(center_x,center_y)
 #TAB#pixels=list(image.getdata())
+#TAB##PRELOOP#
 #TAB#for i in range(len(pixels)):
 #TAB#   px = i % ( width )
 #TAB#   py = trunc( i / width)

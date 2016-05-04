@@ -60,6 +60,8 @@ center_x=int(width/2)
 center_y=int(height/2)
 center=(center_x,center_y)
 pixels=list(image.getdata())
+width=1
+
 for i in range(len(pixels)):
    px = i % ( width )
    py = trunc( i / width)
@@ -74,12 +76,6 @@ for i in range(len(pixels)):
    distance_center_normY=distance_center/height
    vignet_factorX=1-distance_center_normX
    vignet_factorY=1-distance_center_normY
-   
-   z=0
-   r=0
-   w=1
-   q=0
-   g=0
    
    #command#
    pixels[i]=(int(r),int(g),int(b))
