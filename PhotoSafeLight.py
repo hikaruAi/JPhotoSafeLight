@@ -22,6 +22,7 @@ class CommandMode(Enum):
 class PhotoSafeLight(MainWindow):
     def __init__(self):
         MainWindow.__init__(self)
+        self.lastText=""
         self.browseLocation=QtCore.QStandardPaths.standardLocations(6)[0]
         self.tempDirectory=QtCore.QStandardPaths.standardLocations(7)[0]
         self.file=""
@@ -48,7 +49,7 @@ class PhotoSafeLight(MainWindow):
         p=QtGui.QPixmap(":/images/emptyImage.png")
         p_scaled= p.scaled(self.mainImage.size(), QtCore.Qt.KeepAspectRatio,1)
         self.mainImage.setPixmap(p_scaled)
-        self.comandText.insertPlainText(">>")
+        #self.comandText.insertPlainText(">>")
 
     def setTitle(self):
         s="J PhotoSafeLight - $fileName$"
@@ -62,6 +63,14 @@ class PhotoSafeLight(MainWindow):
         #self.useNumpy.stateChanged.connect(self.OnUseNumpyChanged)
         self.actionExport_Filter.triggered.connect(self.On_Menu_ExportFilter)
         self.actionSave_Image.triggered.connect(self.On_Menu_SaveImage)
+        self.actionUndo.triggered.connect(self.On_Menu_Undo)
+
+    def On_Menu_Undo(self):
+        shutil.copy2(self.lastWorkingImage,self.workingImage)
+        self.listOfCommands.pop(-1)
+        self.LoadImageFromTempToPIL()
+        self.RefreshMainImageFromTemp()
+        print("Undo last action")
 
     def On_Menu_SaveImage(self):
         ext=self.workingImage.split(".")[-1]
@@ -107,24 +116,26 @@ class PhotoSafeLight(MainWindow):
         f=f.replace("if __name__","#if __name__")
         f=f.replace("execute","#execute")
         c=compile(f,"<string>","exec")
+        #UNDO#
+        shutil.copy2(self.workingImage,self.lastWorkingImage)
         exec(c)
         self.RefreshMainImageFromTemp()
         self.LoadImageFromTempToPIL()
         print("Execute command time:", time.time()-initTime)
 
     def CommandTextTextChanged(self):
-        if self.comandText.toPlainText()[-1]==">":
-            return
-        currentText=self.comandText.toPlainText().replace(">>","")
+        #if self.comandText.toPlainText()[-1]==">":
+         #   return
+        currentText=self.comandText.toPlainText()
         #print("Changed text:",currentText.replace("\n","#END#"))
         if (len(currentText)>0 and currentText[-1]=="\n"):
             currentCommand=currentText.split("\n")[-2]
             if currentCommand!="":
+                print("->",currentCommand,sep="")
                 self.listOfCommands.append(currentCommand)
                 print(currentCommand)
-                self.comandText.insertPlainText(">>")
+         #       self.comandText.insertPlainText(">>")
                 self.ExecuteLastCommand()
-
     def addColor(self,text,color):
         return "<color="+color+">"+text+"<color>"
 

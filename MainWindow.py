@@ -34,6 +34,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.mainImage.setObjectName("mainImage")
         self.comandText = QtWidgets.QTextEdit(self.centralwidget)
         self.comandText.setGeometry(QtCore.QRect(310, 40, 411, 251))
+        self.comandText.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.comandText.setLineWidth(0)
+        self.comandText.setLineWrapMode(QtWidgets.QTextEdit.NoWrap)
+        self.comandText.setTextInteractionFlags(QtCore.Qt.TextEditorInteraction)
         self.comandText.setObjectName("comandText")
         self.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(self)
@@ -53,9 +57,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.actionExport_Filter.setObjectName("actionExport_Filter")
         self.actionCredits = QtWidgets.QAction(self)
         self.actionCredits.setObjectName("actionCredits")
+        self.actionUndo = QtWidgets.QAction(self)
+        self.actionUndo.setPriority(QtWidgets.QAction.HighPriority)
+        self.actionUndo.setObjectName("actionUndo")
         self.menuFile.addAction(self.actionLoad_Image)
         self.menuFile.addAction(self.actionSave_Image)
         self.menuFile.addAction(self.actionExport_Filter)
+        self.menuFile.addAction(self.actionUndo)
         self.menubar.addAction(self.menuFile.menuAction())
 
         
@@ -64,6 +72,13 @@ class MainWindow(QtWidgets.QMainWindow):
    
         _translate = QtCore.QCoreApplication.translate
         self.setWindowTitle(_translate("MainWindow", "J PhotoSafeLight - $fileName$"))
+        self.comandText.setToolTip(_translate("MainWindow", "Writr your commands"))
+        self.comandText.setWhatsThis(_translate("MainWindow", "Write your commands here and press  ENTER"))
+        self.comandText.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+"p, li { white-space: pre-wrap; }\n"
+"</style></head><body style=\" font-family:\'MS Shell Dlg 2\'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;\"><br /></p></body></html>"))
         self.menuFile.setTitle(_translate("MainWindow", "File"))
         self.actionLoad_Image.setText(_translate("MainWindow", "Load Image"))
         self.actionLoad_Image.setShortcut(_translate("MainWindow", "Ctrl+L"))
@@ -72,6 +87,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.actionExport_Filter.setText(_translate("MainWindow", "Export Filter"))
         self.actionExport_Filter.setShortcut(_translate("MainWindow", "Ctrl+E"))
         self.actionCredits.setText(_translate("MainWindow", "Credits"))
+        self.actionUndo.setText(_translate("MainWindow", "Undo"))
+        self.actionUndo.setShortcut(_translate("MainWindow", "Ctrl+Z"))
 
 import resources
 
